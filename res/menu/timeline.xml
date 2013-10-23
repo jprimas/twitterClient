@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/tweetParams"
+        android:icon="@drawable/ic_chat"
+        android:showAsAction="ifRoom"
+        android:title="Compose">
+    </item>
+
+</menu>
