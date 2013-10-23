@@ -22,6 +22,10 @@ public class Tweet extends BaseModel {
     	return String.valueOf(page);
     }
     
+    public  String getTimestamp(){
+    	return getString("created_at").substring(0,10);
+    }
+    
     public User getUser() {
         return user;
     }
@@ -33,14 +37,6 @@ public class Tweet extends BaseModel {
     public long getId() {
     	long id = getLong("id");
         return id;
-    }
-
-    public boolean isFavorited() {
-        return getBoolean("favorited");
-    }
-
-    public boolean isRetweeted() {
-        return getBoolean("retweeted");
     }
 
     public static Tweet fromJson(JSONObject jsonObject) {

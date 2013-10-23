@@ -34,7 +34,7 @@ public class TweetsAdapter extends ArrayAdapter<Tweet>{
 		ImageLoader.getInstance().displayImage(tweet.getUser().getProfileImageUrl(), imageView);
 		
 		TextView nameView = (TextView) view.findViewById(R.id.tvName);
-		String formattedName = "<b>" + tweet.getUser().getName() + "</b>" + "<small>" + tweet.getUser().getScreenName() + "</small>";
+		String formattedName = "<b>" + tweet.getUser().getName() + "</b>" + "<small>" +"   "+ tweet.getUser().getScreenName() + "		"+ tweet.getTimestamp() +"</small>";
 		nameView.setText(Html.fromHtml(formattedName));
 		
 		TextView bodyView = (TextView) view.findViewById(R.id.tvBody);
