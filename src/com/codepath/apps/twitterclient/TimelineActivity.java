@@ -81,15 +81,27 @@ public class TimelineActivity extends FragmentActivity implements TabListener {
 		
 	}
 	
+	private boolean mReturningWithResult = false;
+	
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1) {
             if (resultCode == RESULT_OK) {
-            	FragmentManager manager = getSupportFragmentManager();
-        		android.support.v4.app.FragmentTransaction fts = manager.beginTransaction();
-            	fts.commitAllowingStateLoss();
+            	mReturningWithResult = true;
             }
         }
     }
+	
+	@Override
+	protected void onPostResume() {
+	    super.onPostResume();
+	    if (mReturningWithResult) {
+	    	FragmentManager manager = getSupportFragmentManager();
+    		android.support.v4.app.FragmentTransaction fts = manager.beginTransaction();
+        	fts.commit();
+        	actionBar.setSelectedNavigationItem(tabHome.getPosition());
+	    }
+	    mReturningWithResult = false;
+	}
 
 	@Override
 	public void onTabReselected(Tab tab, FragmentTransaction ft) {
