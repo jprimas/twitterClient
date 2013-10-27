@@ -7,8 +7,8 @@ public class User extends BaseModel {
         return getString("name");
     }
 
-    public long getId() {
-        return getLong("id");
+    public String getId() {
+        return getString("id_str");
     }
 
     public String getScreenName() {
@@ -17,6 +17,18 @@ public class User extends BaseModel {
     
     public String getProfileImageUrl() {
         return getString("profile_image_url");
+    }
+    
+    public String getTagline(){
+    	return getString("description");
+    }
+    
+    public int getNumOfFollowers(){
+    	return getInt("followers_count");
+    }
+    
+    public int getNumOfFollowing(){
+    	return getInt("friends_count");
     }
 
 

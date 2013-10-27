@@ -9,6 +9,7 @@ import org.json.JSONObject;
 public class Tweet extends BaseModel {
     private User user;
     private static int page = 2;
+    private static int mentionsPage = 2;
     
     public static void increasePageNum(){
     	page++;
@@ -20,6 +21,18 @@ public class Tweet extends BaseModel {
     
     public static String getPageNum(){
     	return String.valueOf(page);
+    }
+    
+    public static void increaseMentionsPageNum(){
+    	mentionsPage++;
+    }
+    
+    public static void initMentionsPageNum(){
+    	mentionsPage = 2;
+    }
+    
+    public static String getMentionsPageNum(){
+    	return String.valueOf(mentionsPage);
     }
     
     public  String getTimestamp(){

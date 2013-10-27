@@ -1,7 +1,6 @@
 package com.codepath.apps.twitterclient;
 
 import org.scribe.builder.api.Api;
-import org.scribe.builder.api.FlickrApi;
 import org.scribe.builder.api.TwitterApi;
 
 import android.content.Context;
@@ -45,6 +44,13 @@ public class TwitterClient extends OAuthBaseClient {
     	client.get(url, params, handler);
     }
     
+    public void getNextMentionsTweets(String pageNum, AsyncHttpResponseHandler handler){
+    	String url = getApiUrl("statuses/mentions_timeline.json");
+    	RequestParams params = new RequestParams();
+        params.put("page", pageNum); 
+    	client.get(url, params, handler);
+    }
+    
     public void postTweet(String tweet, AsyncHttpResponseHandler handler){
     	String url = getApiUrl("statuses/update.json");
     	RequestParams params = new RequestParams();
@@ -52,22 +58,22 @@ public class TwitterClient extends OAuthBaseClient {
         client.post(url, params, handler);
     }
     
-    // CHANGE THIS
-    // DEFINE METHODS for different API endpoints here
-    public void getInterestingnessList(AsyncHttpResponseHandler handler) {
-        String apiUrl = getApiUrl("?nojsoncallback=1&method=flickr.interestingness.getList");
-        // Can specify query string params directly or through RequestParams.
-        RequestParams params = new RequestParams();
-        params.put("format", "json");
-        client.get(apiUrl, params, handler);
+    public void getMentions(AsyncHttpResponseHandler handler){
+    	String url = getApiUrl("statuses/mentions_timeline.json");
+    	client.get(url, null, handler);
     }
     
-    /* 1. Define the endpoint URL with getApiUrl and pass a relative path to the endpoint
-     * 	  i.e getApiUrl("statuses/home_timeline.json");
-     * 2. Define the parameters to pass to the request (query or body)
-     *    i.e RequestParams params = new RequestParams("foo", "bar");
-     * 3. Define the request method and make a call to the client
-     *    i.e client.get(apiUrl, params, handler);
-     *    i.e client.post(apiUrl, params, handler);
-     */
+    public void getMyInfo(AsyncHttpResponseHandler handler){
+    	String apiUrl = getApiUrl("account/verify_credentials.json");
+    	client.get(apiUrl, null, handler);
+    }
+    
+    public void getUserTimeline(String userId, AsyncHttpResponseHandler handler){
+    	System.out.println(userId);
+    	String apiUrl = getApiUrl("statuses/user_timeline.json");
+    	RequestParams params = new RequestParams();
+        params.put("user_id", userId); 
+    	client.get(apiUrl, params, handler);
+    }
+    
 }

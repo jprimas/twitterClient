@@ -1,31 +1,41 @@
 package com.codepath.apps.twitterclient;
 
-import java.util.ArrayList;
+import org.json.JSONObject;
 
-import org.json.JSONArray;
-
-import android.app.Activity;
+import android.app.ActionBar;
+import android.app.ActionBar.Tab;
+import android.app.ActionBar.TabListener;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ListView;
 
-import com.codepath.apps.twitterclient.models.Tweet;
+import com.codepath.apps.twitterclient.fragments.HomeTimelineFragment;
+import com.codepath.apps.twitterclient.fragments.MentionsFragment;
+import com.codepath.apps.twitterclient.models.User;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
-public class TimelineActivity extends Activity {
-	private TweetsAdapter adapter;
-	private ArrayList<Tweet> tweets;
-	private ListView lvTweets;
-
+public class TimelineActivity extends FragmentActivity implements TabListener {
+	
+	private ActionBar actionBar;
+	private Tab tabHome;
+	User user;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_timeline);
-		System.out.println("Started view");
-		initTimeline();
+		setupNavigationTabs();
+		TwitterApp.getRestClient().getMyInfo(new JsonHttpResponseHandler(){
+			@Override
+			public void onSuccess(JSONObject json) {
+				user = User.fromJson(json);
+				getActionBar().setTitle(user.getScreenName());
+			}
+		});
 	}
 
 	@Override
@@ -41,46 +51,69 @@ public class TimelineActivity extends Activity {
         case R.id.tweetParams:
             startActivityForResult(new Intent(this, PostTweetActivity.class), 1);
             break;
+        case R.id.userProfile:
+        	Intent i = new Intent(this, ProfileActivity.class);
+        	i.putExtra("userId", user.getId());
+        	startActivity(i);
+        	break;
         default:
             break;
         }
         return true;
     }
 	
-	private void initTimeline(){
-		TwitterApp.getRestClient().getHomeTimeline(new JsonHttpResponseHandler(){
-			@Override
-			public void onSuccess(JSONArray jsonTweets) {
-				Tweet.initPageNum();
-				tweets = Tweet.fromJson(jsonTweets);
-				lvTweets = (ListView)findViewById(R.id.lvtweets);
-				adapter = new TweetsAdapter(getBaseContext(), tweets);
-				lvTweets.setAdapter(adapter);
-				System.out.println(tweets.toString());
-			}
-		});
+	private void setupNavigationTabs(){
+		actionBar = getActionBar();
+		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+		actionBar.setDisplayShowTitleEnabled(true);
+		tabHome = actionBar.newTab().setText("Home")
+				.setTag("HomeTimelineFragment")
+				.setIcon(R.drawable.ic_twitter)
+				.setTabListener(this);
+		Tab tabMentions = actionBar.newTab().setText("Mentions")
+				.setTag("MentionsFragment")
+				.setIcon(R.drawable.ic_comments)
+				.setTabListener(this);
+		
+		actionBar.addTab(tabHome);
+		actionBar.addTab(tabMentions);
+		actionBar.selectTab(tabHome);
+		
 	}
 	
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1) {
             if (resultCode == RESULT_OK) {
-            	System.out.println("Tweet should have been posted");
-            	initTimeline();
+            	FragmentManager manager = getSupportFragmentManager();
+        		android.support.v4.app.FragmentTransaction fts = manager.beginTransaction();
+            	fts.commitAllowingStateLoss();
             }
         }
     }
-	
-	public void onLoadMoreBtnClick(View v){
-		System.out.print("Btn pressed    ");
-		TwitterApp.getRestClient().getNextTweets(Tweet.getPageNum(), new JsonHttpResponseHandler(){
-			@Override
-			public void onSuccess(JSONArray jsonTweets) {
-				Tweet.increasePageNum();
-				System.out.println("Got Json: " + jsonTweets);
-				adapter.addAll(Tweet.fromJson(jsonTweets));
-				System.out.println("Added Tweets");
-			}
-		});
+
+	@Override
+	public void onTabReselected(Tab tab, FragmentTransaction ft) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onTabSelected(Tab tab, FragmentTransaction ft) {
+		FragmentManager manager = getSupportFragmentManager();
+		android.support.v4.app.FragmentTransaction fts = manager.beginTransaction();
+		if(tab.getTag().equals("HomeTimelineFragment")){
+			fts.replace(R.id.frame_container, new HomeTimelineFragment());
+		}else{
+			fts.replace(R.id.frame_container, new MentionsFragment());
+		}
+		fts.commit();
+		
+	}
+
+	@Override
+	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

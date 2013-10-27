@@ -6,5 +6,12 @@
         android:showAsAction="ifRoom"
         android:title="Compose">
     </item>
+    
+    <item
+        android:id="@+id/userProfile"
+        android:icon="@drawable/ic_person"
+        android:showAsAction="ifRoom"
+        android:title="Profile">
+    </item>
 
 </menu>

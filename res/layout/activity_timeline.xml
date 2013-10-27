@@ -4,23 +4,15 @@
     android:layout_height="match_parent"
     tools:context=".TimelineActivity" >
 
-    <ListView
-        android:id="@+id/lvtweets"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/loadMoreBtn"
-        android:layout_centerHorizontal="true" >
-
-    </ListView>
-
-    <Button
-        android:id="@+id/loadMoreBtn"
-        style="?android:attr/buttonStyleSmall"
+    <FrameLayout
+        android:id="@+id/frame_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:onClick="onLoadMoreBtnClick"
-        android:text="Load More" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true" >
+
+    </FrameLayout>
 
 </RelativeLayout>
